@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import it.xpug.kata.birthday_greetings.dal.EmployeeRepository;
 import it.xpug.kata.birthday_greetings.domain.XDate;
 import it.xpug.kata.birthday_greetings.service.BirthdayService;
-import it.xpug.kata.birthday_greetings.service.EmailService;
+import it.xpug.kata.birthday_greetings.notification.EmailService;
 import org.junit.*;
 
 import com.dumbster.smtp.*;

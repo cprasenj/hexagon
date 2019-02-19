@@ -1,4 +1,4 @@
-package it.xpug.kata.birthday_greetings.service;
+package it.xpug.kata.birthday_greetings.notification;
 
 import it.xpug.kata.birthday_greetings.domain.Email;
 import it.xpug.kata.birthday_greetings.domain.Employee;
@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 
-public class EmailService {
+public class EmailService implements MessageService<Employee> {
     private String smtpHost;
     private int smtpPort;
     private String sender = "sender@here.com";
@@ -28,9 +28,7 @@ public class EmailService {
         return new Email(recipient, body, subject);
     }
 
-    public void sendMessage(List<Employee> employees) throws MessagingException {
-        // Create a mail session
-
+    public void sendMessage(List<Employee> employees) {
         for(Employee e: employees) {
 
             Email email = createEmail(e);
@@ -39,15 +37,16 @@ public class EmailService {
             props.put("mail.smtp.port", "" + smtpPort);
             Session session = Session.getInstance(props, null);
 
-            // Construct the message
             Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(sender));
-            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(email.getRecipient()));
-            msg.setSubject(email.getSubject());
-            msg.setText(email.getBody());
-
-            // Send the message
-            Transport.send(msg);
+            try {
+                msg.setFrom(new InternetAddress(sender));
+                msg.setRecipient(Message.RecipientType.TO, new InternetAddress(email.getRecipient()));
+                msg.setSubject(email.getSubject());
+                msg.setText(email.getBody());
+                Transport.send(msg);
+            } catch (MessagingException e1) {
+                System.out.println(e1.getMessage());
+            }
         }
     }
 }
